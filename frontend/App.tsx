@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   ScrollView,
   StatusBar,
@@ -9,7 +8,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   getBalance,
   type AccountBalance,
@@ -18,26 +16,27 @@ import {
 
 export default function App() {
   const [balance, setBalance] = useState<AccountBalance | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const load = async (bank: BankId) => {
     setLoading(true);
+    setError(null);
     try {
       const result = await getBalance(bank);
       setBalance(result);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Error desconocido';
-      Alert.alert('No se pudo consultar el saldo', message);
+    } catch (loadError) {
+      setError(
+        loadError instanceof Error ? loadError.message : 'Error desconocido',
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaProvider>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <Text style={styles.title}>Multibank</Text>
         <Text style={styles.subtitle}>Consulta tu saldo del backend NestJS</Text>
 
@@ -64,6 +63,13 @@ export default function App() {
           <Text style={styles.empty}>Aún no has consultado ningún saldo.</Text>
         )}
 
+        {error ? (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorTitle}>No se pudo consultar el saldo</Text>
+            <Text style={styles.errorMessage}>{error}</Text>
+          </View>
+        ) : null}
+
         {loading ? <ActivityIndicator size="large" /> : null}
 
         <Pressable
@@ -89,7 +95,6 @@ export default function App() {
           <Text style={styles.buttonLabel}>Saldo de prueba (mock)</Text>
         </Pressable>
       </ScrollView>
-    </SafeAreaProvider>
   );
 }
 
@@ -145,6 +150,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#888',
     fontSize: 14,
+  },
+  errorBox: {
+    backgroundColor: '#fdecea',
+    borderColor: '#e2b6b0',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 14,
+    gap: 4,
+  },
+  errorTitle: {
+    color: '#a33',
+    fontWeight: '600',
+    fontSize: 15,
+  },
+  errorMessage: {
+    color: '#8a5550',
+    fontSize: 13,
   },
   button: {
     borderRadius: 10,
