@@ -1,5 +1,7 @@
 export interface BankCredentialsConfig {
-  user: string;
+  user?: string;
+  card?: string;
+  ci?: string;
   password: string;
   url: string;
 }
@@ -24,6 +26,12 @@ export default (): AppConfig => ({
       user: process.env.BDV_USER ?? '',
       password: process.env.BDV_PASSWORD ?? '',
       url: process.env.BDV_URL ?? 'https://bdvenlinea.banvenez.com/',
+    },
+    bnc: {
+      card: process.env.BNC_CARD ?? '',
+      ci: process.env.BNC_CI ?? '',
+      password: process.env.BNC_PASSWORD ?? '',
+      url: process.env.BNC_URL ?? 'https://personas.bncenlinea.com/',
     },
     mock: {
       user: 'mock-user',

@@ -21,7 +21,9 @@
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "scout:bdv": "node --env-file=.env scripts/bdv-scout.ts",
-    "observe:bdv": "node --env-file=.env scripts/bdv-observe.ts"
+    "observe:bdv": "node --env-file=.env scripts/bdv-observe.ts",
+    "scout:bnc": "node --env-file=.env scripts/bnc-scout.ts",
+    "observe:bnc": "node --env-file=.env scripts/bnc-observe.ts"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",

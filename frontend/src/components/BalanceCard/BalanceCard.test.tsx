@@ -66,6 +66,11 @@ test('marca el origen como caché', async () => {
   expect(allText(renderer.toJSON())).toContain('Caché');
 });
 
+test('muestra el nombre del Banco Nacional de Crédito', async () => {
+  const renderer = await renderCard({ ...LIVE_BALANCE, bankId: 'bnc' });
+  expect(allText(renderer.toJSON())).toContain('Banco Nacional de Crédito');
+});
+
 test('expone el botón de actualizar si recibe onRefresh', async () => {
   let renderer!: ReactTestRenderer.ReactTestRenderer;
   await ReactTestRenderer.act(async () => {

@@ -32,5 +32,6 @@ test('renderiza la app y muestra la pantalla principal', async () => {
   expect(text).toContain('Multibank');
   expect(text).toContain('Selecciona un banco para consultar tu saldo');
   expect(text).toContain('Saldo BDV');
+  expect(text).toContain('Saldo BNC');
   expect(text).toContain('Saldo de prueba');
 });

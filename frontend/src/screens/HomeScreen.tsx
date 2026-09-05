@@ -24,10 +24,12 @@ function makeStyles(colors: ThemeColors) {
     },
     actions: {
       flexDirection: 'row',
+      flexWrap: 'wrap',
       gap: 12,
     },
     actionButton: {
       flex: 1,
+      minWidth: 124,
     },
     inlineError: {
       flexDirection: 'row',
@@ -148,6 +150,14 @@ export function HomeScreen() {
           disabled={isLoading}
           style={styles.actionButton}
           accessibilityLabel="Consultar saldo Banco de Venezuela"
+        />
+        <Button
+          label="Saldo BNC"
+          variant="primary"
+          onPress={() => loadBank('bnc')}
+          disabled={isLoading}
+          style={styles.actionButton}
+          accessibilityLabel="Consultar saldo Banco Nacional de Crédito"
         />
         <Button
           label="Saldo de prueba"

@@ -12,12 +12,16 @@ function makeConfig(defaultBank: string): ConfigService {
 
 const mockGateway = { bankId: 'mock', getBalance: vi.fn() } as unknown as BankGatewayPort;
 const bdvGateway = { bankId: 'bdv', getBalance: vi.fn() } as unknown as BankGatewayPort;
+const bncGateway = { bankId: 'bnc', getBalance: vi.fn() } as unknown as BankGatewayPort;
 
 describe('BankGatewayRegistry', () => {
   let registry: BankGatewayRegistry;
 
   beforeEach(() => {
-    registry = new BankGatewayRegistry([mockGateway, bdvGateway], makeConfig('mock'));
+    registry = new BankGatewayRegistry(
+      [mockGateway, bdvGateway, bncGateway],
+      makeConfig('mock'),
+    );
   });
 
   it('resuelve el banco por defecto (mock) sin parámetro', () => {
@@ -26,6 +30,7 @@ describe('BankGatewayRegistry', () => {
 
   it('resuelve un banco por su id', () => {
     expect(registry.resolve('bdv').bankId).toBe('bdv');
+    expect(registry.resolve('bnc').bankId).toBe('bnc');
   });
 
   it('lanza BankNotSupportedException para un banco desconocido', () => {
@@ -33,6 +38,6 @@ describe('BankGatewayRegistry', () => {
   });
 
   it('lista los bancos registrados', () => {
-    expect(registry.listBanks()).toEqual(['mock', 'bdv']);
+    expect(registry.listBanks()).toEqual(['mock', 'bdv', 'bnc']);
   });
 });
