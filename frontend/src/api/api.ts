@@ -18,21 +18,44 @@ export interface ApiError {
   error: string;
 }
 
+const REQUEST_TIMEOUT_MS = 180_000;
+
+// Para probar desde el teléfono en la misma red, cambiá este host por la
+// IP de tu PC (por ejemplo '192.168.1.20').
+export const API_HOST_OVERRIDE: string | null = null;
+
 const DEFAULT_HOST = Platform.select({
   android: '10.0.2.2',
   default: '127.0.0.1',
 });
 
-export const API_BASE_URL = `http://${DEFAULT_HOST}:3000`;
+export const API_BASE_URL = `http://${API_HOST_OVERRIDE ?? DEFAULT_HOST}:3000`;
 
 async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      signal: controller.signal,
+    });
+  } catch (cause) {
+    if (cause instanceof Error && cause.name === 'AbortError') {
+      throw new Error('La solicitud tardó demasiado. Inténtalo de nuevo.');
+    }
+    throw new Error('No se pudo conectar con el servidor.');
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
   if (!response.ok) {
     const body = (await response.json().catch(() => undefined)) as
       | Partial<ApiError>
       | undefined;
     throw new Error(body?.message ?? `HTTP ${response.status}`);
   }
+
   return (await response.json()) as T;
 }
 
