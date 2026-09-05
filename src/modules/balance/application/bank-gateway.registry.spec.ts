@@ -1,0 +1,38 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { ConfigService } from '@nestjs/config';
+import { BankGatewayRegistry } from './bank-gateway.registry.js';
+import type { BankGatewayPort } from '../domain/ports/bank-gateway.port.js';
+import { BankNotSupportedException } from '../domain/exceptions/bank-not-supported.exception.js';
+
+function makeConfig(defaultBank: string): ConfigService {
+  return {
+    get: (key: string) => (key === 'defaultBank' ? defaultBank : undefined),
+  } as unknown as ConfigService;
+}
+
+const mockGateway = { bankId: 'mock', getBalance: vi.fn() } as unknown as BankGatewayPort;
+const bdvGateway = { bankId: 'bdv', getBalance: vi.fn() } as unknown as BankGatewayPort;
+
+describe('BankGatewayRegistry', () => {
+  let registry: BankGatewayRegistry;
+
+  beforeEach(() => {
+    registry = new BankGatewayRegistry([mockGateway, bdvGateway], makeConfig('mock'));
+  });
+
+  it('resuelve el banco por defecto (mock) sin parámetro', () => {
+    expect(registry.resolve().bankId).toBe('mock');
+  });
+
+  it('resuelve un banco por su id', () => {
+    expect(registry.resolve('bdv').bankId).toBe('bdv');
+  });
+
+  it('lanza BankNotSupportedException para un banco desconocido', () => {
+    expect(() => registry.resolve('desconocido')).toThrow(BankNotSupportedException);
+  });
+
+  it('lista los bancos registrados', () => {
+    expect(registry.listBanks()).toEqual(['mock', 'bdv']);
+  });
+});

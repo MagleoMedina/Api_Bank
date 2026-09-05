@@ -1,0 +1,1 @@
+export const BANK_GATEWAY_TOKEN = 'BANK_GATEWAY';
