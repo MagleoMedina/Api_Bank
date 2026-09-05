@@ -7,6 +7,7 @@ import { InMemoryBalanceCache } from './infrastructure/in-memory-balance-cache.j
 import { MockBankAdapter } from './infrastructure/adapters/mock/mock-bank.adapter.js';
 import { BdvBankAdapter } from './infrastructure/adapters/bdv/bdv-bank.adapter.js';
 import { BncBankAdapter } from './infrastructure/adapters/bnc/bnc-bank.adapter.js';
+import { VolBankAdapter } from './infrastructure/adapters/vol/vol-bank.adapter.js';
 import { BalanceController } from './presentation/balance.controller.js';
 
 @Global()
@@ -18,15 +19,17 @@ import { BalanceController } from './presentation/balance.controller.js';
     MockBankAdapter,
     BdvBankAdapter,
     BncBankAdapter,
+    VolBankAdapter,
     { provide: BALANCE_CACHE_TOKEN, useClass: InMemoryBalanceCache },
     {
       provide: BANK_GATEWAY_TOKEN,
-      useFactory: (mock: MockBankAdapter, bdv: BdvBankAdapter, bnc: BncBankAdapter) => [
-        mock,
-        bdv,
-        bnc,
-      ],
-      inject: [MockBankAdapter, BdvBankAdapter, BncBankAdapter],
+      useFactory: (
+        mock: MockBankAdapter,
+        bdv: BdvBankAdapter,
+        bnc: BncBankAdapter,
+        vol: VolBankAdapter,
+      ) => [mock, bdv, bnc, vol],
+      inject: [MockBankAdapter, BdvBankAdapter, BncBankAdapter, VolBankAdapter],
     },
   ],
   exports: [GetBalanceUseCase, BankGatewayRegistry],

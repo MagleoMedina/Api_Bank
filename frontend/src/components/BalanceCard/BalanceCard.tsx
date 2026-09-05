@@ -21,6 +21,7 @@ const BANK_NAMES: Record<string, string> = {
   bdv: 'Banco de Venezuela',
   bnc: 'Banco Nacional de Crédito',
   mock: 'Modo de prueba',
+  vol: 'Venezolano de Crédito',
 };
 
 function makeStyles(colors: ThemeColors) {

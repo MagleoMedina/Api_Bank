@@ -160,6 +160,14 @@ export function HomeScreen() {
           accessibilityLabel="Consultar saldo Banco Nacional de Crédito"
         />
         <Button
+          label="Saldo VOL"
+          variant="primary"
+          onPress={() => loadBank('vol')}
+          disabled={isLoading}
+          style={styles.actionButton}
+          accessibilityLabel="Consultar saldo Venezolano de Crédito"
+        />
+        <Button
           label="Saldo de prueba"
           onPress={() => loadBank('mock')}
           disabled={isLoading}

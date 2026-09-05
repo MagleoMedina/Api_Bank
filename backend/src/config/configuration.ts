@@ -33,6 +33,11 @@ export default (): AppConfig => ({
       password: process.env.BNC_PASSWORD ?? '',
       url: process.env.BNC_URL ?? 'https://personas.bncenlinea.com/',
     },
+    vol: {
+      user: process.env.VOL_USER ?? '',
+      password: process.env.VOL_PASSWORD ?? '',
+      url: process.env.VOL_URL ?? 'https://vol.venezolano.com/',
+    },
     mock: {
       user: 'mock-user',
       password: 'mock-password',

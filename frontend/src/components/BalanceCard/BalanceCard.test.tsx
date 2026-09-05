@@ -71,6 +71,11 @@ test('muestra el nombre del Banco Nacional de Crédito', async () => {
   expect(allText(renderer.toJSON())).toContain('Banco Nacional de Crédito');
 });
 
+test('muestra el nombre del Venezolano de Crédito', async () => {
+  const renderer = await renderCard({ ...LIVE_BALANCE, bankId: 'vol' });
+  expect(allText(renderer.toJSON())).toContain('Venezolano de Crédito');
+});
+
 test('expone el botón de actualizar si recibe onRefresh', async () => {
   let renderer!: ReactTestRenderer.ReactTestRenderer;
   await ReactTestRenderer.act(async () => {
