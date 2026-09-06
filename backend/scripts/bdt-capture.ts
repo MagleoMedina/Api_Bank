@@ -105,11 +105,15 @@ function analyze(): void {
 async function main(): Promise<void> {
   ensureOutDir();
   console.log(`Grabando tu flujo BDT en: ${OUT_DIR}`);
+  console.log('Bloqueando scripts anti-devtools para evitar recargas automáticas.');
   console.log('Abre el navegador y navega manualmente por el login,');
   console.log('completa cédula/paso de contraseña y quédate en el DASHBOARD con el saldo visible.\n');
 
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
+  // Evita que disabled-devtool.js detecte devtools y fuerce recargas.
+  await page.route('**/disabled-devtool.js', (route) => route.abort());
+  await page.route('**/disabled-devtool*', (route) => route.abort());
   page.on('dialog', (dialog) => dialog.accept().catch(() => undefined));
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
