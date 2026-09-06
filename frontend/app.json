@@ -1,4 +1,8 @@
 {
-  "name": "Multibank",
-  "displayName": "Multibank"
+  "expo": {
+    "name": "Multibank",
+    "slug": "multibank",
+    "version": "0.0.1",
+    "platforms": ["android", "ios", "web"]
+  }
 }
