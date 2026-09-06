@@ -8,16 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { getUserLabel, BANK_NAMES } from '../../types';
-
-type UserCredential = {
-  id: number;
-  bank_id: string;
-  user_name: string;
-  password: string;
-  ci?: string;
-  cedula?: string;
-  is_default: boolean;
-};
+import type { UserCredential } from '../../types';
 
 type Props = {
   visible: boolean;

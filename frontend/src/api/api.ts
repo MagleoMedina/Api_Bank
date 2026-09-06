@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { API_BASE_URL } from '../config/api';
 
 export type BankId = 'bfc' | 'bdt' | 'bdv' | 'bnc' | 'mock' | 'vol';
 
@@ -21,16 +21,7 @@ export interface ApiError {
 
 const REQUEST_TIMEOUT_MS = 180_000;
 
-// Para probar desde el teléfono en la misma red, cambiá este host por la
-// IP de tu PC (por ejemplo '192.168.1.20').
-export const API_HOST_OVERRIDE: string | null = null;
-
-const DEFAULT_HOST = Platform.select({
-  android: '10.0.2.2',
-  default: '127.0.0.1',
-});
-
-export const API_BASE_URL = `http://${API_HOST_OVERRIDE ?? DEFAULT_HOST}:3000`;
+export { API_BASE_URL };
 
 async function request<T>(path: string): Promise<T> {
   const controller = new AbortController();

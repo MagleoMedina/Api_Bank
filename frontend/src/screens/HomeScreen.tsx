@@ -165,7 +165,8 @@ export function HomeScreen({ onNavigateToCredentials }: Props) {
         account: response.account ?? '',
         balance: response.balance ?? 0,
         currency: response.currency ?? 'VES',
-        fetchedAt: new Date(response.fetchedAt ?? Date.now()),
+        fetchedAt: new Date(response.fetchedAt ?? Date.now()).toISOString(),
+        source: 'live',
         userName: credential.user_name,
       };
       setBalanceDirectly(balanceData);

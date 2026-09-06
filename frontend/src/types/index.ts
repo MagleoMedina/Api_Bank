@@ -28,7 +28,7 @@ export const BANK_NAMES: Record<string, string> = {
 
 export function getUserLabel(credential: UserCredential): string {
   const field = BANK_DISPLAY_FIELDS[credential.bank_id] ?? 'user_name';
-  const value = (credential as Record<string, unknown>)[field];
+  const value = field === 'ci' ? credential.ci : field === 'cedula' ? credential.cedula : credential.user_name;
   if (typeof value === 'string' && value.length > 0) {
     return value;
   }

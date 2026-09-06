@@ -8,16 +8,7 @@ import {
   getDefaultCredential,
   getAllCredentials,
 } from '../services/credentialService';
-
-type UserCredential = {
-  id: number;
-  bank_id: string;
-  user_name: string;
-  password: string;
-  ci?: string;
-  cedula?: string;
-  is_default: boolean;
-};
+import type { UserCredential } from '../types';
 
 type CredentialContextType = {
   credentials: UserCredential[];
