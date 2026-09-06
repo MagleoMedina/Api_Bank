@@ -47,7 +47,7 @@ export function EmptyState({ message, hint }: EmptyStateProps) {
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
-    <View style={styles.container} accessibilityRole="status">
+    <View style={styles.container}>
       <View style={styles.tile}>
         <Text style={styles.tileGlyph}>⇄</Text>
       </View>
