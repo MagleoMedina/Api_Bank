@@ -8,6 +8,8 @@ interface SQLiteCredential {
   bank_id: string;
   user_name: string;
   password: string;
+  ci: string | null;
+  cedula: string | null;
   is_default: number;
   created_at: string;
   updated_at: string;
@@ -20,6 +22,8 @@ export async function initializeDatabase(): Promise<void> {
       bank_id TEXT NOT NULL,
       user_name TEXT NOT NULL,
       password TEXT NOT NULL,
+      ci TEXT,
+      cedula TEXT,
       is_default INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -31,7 +35,9 @@ export async function addCredential(
   bankId: string,
   userName: string,
   password: string,
-  isDefault: boolean = false
+  isDefault: boolean = false,
+  ci?: string,
+  cedula?: string,
 ): Promise<void> {
   if (isDefault) {
     await db.runAsync(
@@ -40,8 +46,8 @@ export async function addCredential(
     );
   }
   await db.runAsync(
-    `INSERT INTO user_credentials (bank_id, user_name, password, is_default) VALUES (?, ?, ?, ?)`,
-    [bankId, userName, password, isDefault ? 1 : 0]
+    `INSERT INTO user_credentials (bank_id, user_name, password, ci, cedula, is_default) VALUES (?, ?, ?, ?, ?, ?)`,
+    [bankId, userName, password, ci ?? null, cedula ?? null, isDefault ? 1 : 0]
   );
 }
 
@@ -53,11 +59,13 @@ export async function updateCredential(
   id: number,
   userName: string,
   password: string,
-  isDefault: boolean = false
+  isDefault: boolean = false,
+  ci?: string,
+  cedula?: string,
 ): Promise<void> {
   await db.runAsync(
-    `UPDATE user_credentials SET user_name = ?, password = ?, is_default = ? WHERE id = ?`,
-    [userName, password, isDefault ? 1 : 0, id]
+    `UPDATE user_credentials SET user_name = ?, password = ?, ci = ?, cedula = ?, is_default = ? WHERE id = ?`,
+    [userName, password, ci ?? null, cedula ?? null, isDefault ? 1 : 0, id]
   );
 }
 
@@ -68,6 +76,8 @@ function toUserCredential(row: SQLiteCredential): UserCredential {
     user_name: row.user_name,
     password: row.password,
     is_default: Boolean(row.is_default),
+    ci: row.ci ?? undefined,
+    cedula: row.cedula ?? undefined,
     created_at: row.created_at,
     updated_at: row.updated_at,
   };
@@ -75,7 +85,7 @@ function toUserCredential(row: SQLiteCredential): UserCredential {
 
 export async function getCredentialsByBank(bankId: string): Promise<UserCredential[]> {
   const rows = await db.getAllAsync<SQLiteCredential>(
-    `SELECT id, bank_id, user_name, password, is_default, created_at, updated_at FROM user_credentials WHERE bank_id = ? ORDER BY is_default DESC, user_name`,
+    `SELECT * FROM user_credentials WHERE bank_id = ? ORDER BY is_default DESC, user_name`,
     [bankId]
   );
   return rows.map(toUserCredential);
@@ -88,7 +98,7 @@ export async function getDefaultCredential(bankId: string): Promise<UserCredenti
 
 export async function getAllCredentials(): Promise<UserCredential[]> {
   const rows = await db.getAllAsync<SQLiteCredential>(
-    `SELECT id, bank_id, user_name, password, is_default, created_at, updated_at FROM user_credentials ORDER BY bank_id, is_default DESC, user_name`
+    `SELECT * FROM user_credentials ORDER BY bank_id, is_default DESC, user_name`
   );
   return rows.map(toUserCredential);
 }

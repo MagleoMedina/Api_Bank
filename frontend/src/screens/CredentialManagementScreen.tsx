@@ -11,6 +11,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useCredential } from '../contexts/CredentialContext';
+import { getUserLabel, BANK_NAMES } from '../types';
 
 type Props = {
   bank: string;
@@ -19,7 +20,7 @@ type Props = {
 
 export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
   const {
-    credentials,
+    allCredentials,
     addCredential,
     deleteCredential,
     updateCredential,
@@ -30,6 +31,8 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newUser, setNewUser] = useState('');
   const [newPass, setNewPass] = useState('');
+  const [newCi, setNewCi] = useState('');
+  const [newCedula, setNewCedula] = useState('');
   const [isDefault, setIsDefault] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -37,15 +40,28 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
     loadCredentialsByBank(bank);
   }, [bank, loadCredentialsByBank]);
 
+  const needsCi = bank === 'bnc';
+  const needsCedula = bank === 'bdt';
+
   const handleAdd = async () => {
     if (!newUser || !newPass) {
       Alert.alert('Error', 'Usuario y contraseña son requeridos');
       return;
     }
+    if (needsCi && !newCi) {
+      Alert.alert('Error', 'CI es requerida para BNC');
+      return;
+    }
+    if (needsCedula && !newCedula) {
+      Alert.alert('Error', 'Cédula es requerida para BDT');
+      return;
+    }
     try {
-      await addCredential(bank, newUser, newPass, isDefault);
+      await addCredential(bank, newUser, newPass, isDefault, newCi || undefined, newCedula || undefined);
       setNewUser('');
       setNewPass('');
+      setNewCi('');
+      setNewCedula('');
       setIsDefault(false);
       Alert.alert('Éxito', 'Usuario agregado correctamente');
       await loadCredentialsByBank(bank);
@@ -79,11 +95,13 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
       return;
     }
     try {
-      await updateCredential(editingId, newUser, newPass, isDefault);
+      await updateCredential(editingId, newUser, newPass, isDefault, newCi || undefined, newCedula || undefined);
       Alert.alert('Éxito', 'Credencial actualizada');
       setEditingId(null);
       setNewUser('');
       setNewPass('');
+      setNewCi('');
+      setNewCedula('');
       setIsDefault(false);
       setShowModal(false);
       await loadCredentialsByBank(bank);
@@ -96,21 +114,26 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
     setEditingId(cred.id);
     setNewUser(cred.user_name);
     setNewPass(cred.password);
+    setNewCi(cred.ci ?? '');
+    setNewCedula(cred.cedula ?? '');
     setIsDefault(Boolean(cred.is_default));
     setShowModal(true);
   };
 
+  const bankCreds = allCredentials.filter((c) => c.bank_id === bank);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Gestión de Credenciales - {bank.toUpperCase()}</Text>
+      <Text style={styles.title}>Credenciales - {BANK_NAMES[bank] ?? bank.toUpperCase()}</Text>
 
       <FlatList
-        data={credentials.filter((c) => c.bank_id === bank)}
+        data={bankCreds}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.userItem}>
             <View style={styles.userInfo}>
-              <Text style={styles.userName}>{item.user_name}</Text>
+              <Text style={styles.userName}>{getUserLabel(item)}</Text>
+              <Text style={styles.userDetail}>{item.user_name}</Text>
               {item.is_default ? (
                 <Text style={styles.isDefaultText}>★ Default</Text>
               ) : null}
@@ -120,7 +143,7 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
                 style={styles.actionBtn}
                 onPress={() => {
                   setSelectedCredential(item);
-                  Alert.alert('Seleccionado', `Ahora usarás ${item.user_name} para consultar`);
+                  Alert.alert('Seleccionado', `Ahora usarás ${getUserLabel(item)} para consultar`);
                 }}
               >
                 <Text style={styles.actionBtnText}>Usar</Text>
@@ -133,7 +156,7 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
               </Pressable>
               <Pressable
                 style={[styles.actionBtn, styles.deleteBtn]}
-                onPress={() => handleDelete(item.id, item.user_name)}
+                onPress={() => handleDelete(item.id, getUserLabel(item))}
               >
                 <Text style={[styles.actionBtnText, styles.deleteBtnText]}>Eliminar</Text>
               </Pressable>
@@ -165,6 +188,24 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
               secureTextEntry
               style={styles.input}
             />
+            {needsCi && (
+              <TextInput
+                placeholder="CI (cédula)"
+                value={newCi}
+                onChangeText={setNewCi}
+                style={styles.input}
+                keyboardType="numeric"
+              />
+            )}
+            {needsCedula && (
+              <TextInput
+                placeholder="Cédula"
+                value={newCedula}
+                onChangeText={setNewCedula}
+                style={styles.input}
+                keyboardType="numeric"
+              />
+            )}
             <Pressable
               style={styles.checkboxRow}
               onPress={() => setIsDefault(!isDefault)}
@@ -182,6 +223,8 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
                   setEditingId(null);
                   setNewUser('');
                   setNewPass('');
+                  setNewCi('');
+                  setNewCedula('');
                   setIsDefault(false);
                 }}
               />
@@ -207,6 +250,24 @@ export const CredentialManagementScreen = ({ bank, onBack }: Props) => {
           secureTextEntry
           style={styles.input}
         />
+        {needsCi && (
+          <TextInput
+            placeholder="CI (cédula)"
+            value={newCi}
+            onChangeText={setNewCi}
+            style={styles.input}
+            keyboardType="numeric"
+          />
+        )}
+        {needsCedula && (
+          <TextInput
+            placeholder="Cédula"
+            value={newCedula}
+            onChangeText={setNewCedula}
+            style={styles.input}
+            keyboardType="numeric"
+          />
+        )}
         <Pressable
           style={styles.checkboxRow}
           onPress={() => setIsDefault(!isDefault)}
@@ -241,6 +302,7 @@ const styles = StyleSheet.create({
   },
   userInfo: { flex: 1 },
   userName: { fontSize: 14, fontWeight: '500' },
+  userDetail: { fontSize: 12, color: '#9ca3af', marginTop: 1 },
   isDefaultText: { color: '#059669', fontSize: 12, marginTop: 2 },
   userActions: { flexDirection: 'row', gap: 6 },
   actionBtn: {

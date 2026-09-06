@@ -81,6 +81,12 @@ function makeStyles(colors: ThemeColors) {
       color: colors.textMuted,
       textTransform: 'capitalize',
     },
+    userName: {
+      fontSize: 15,
+      fontWeight: '600',
+      color: colors.ink,
+      marginTop: 4,
+    },
     amount: {
       fontSize: 32,
       fontWeight: '700',
@@ -181,6 +187,10 @@ export function BalanceCard({
           <Text style={styles.accountType}>{data.accountType}</Text>
         ) : null}
       </View>
+
+      {data.userName ? (
+        <Text style={styles.userName}>{data.userName}</Text>
+      ) : null}
 
       <Text
         style={styles.amount}

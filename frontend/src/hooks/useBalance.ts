@@ -15,6 +15,7 @@ export interface UseBalanceResult {
   loadBank: (bank: BankId) => Promise<void>;
   refresh: () => Promise<void>;
   clearError: () => void;
+  setBalanceDirectly: (data: AccountBalance) => void;
 }
 
 function toMessage(error: unknown): string {
@@ -81,6 +82,11 @@ export function useBalance(): UseBalanceResult {
 
   const clearError = useCallback(() => setError(null), []);
 
+  const setBalanceDirectly = useCallback((data: AccountBalance) => {
+    setBalance(data);
+    setError(null);
+  }, []);
+
   return {
     balance,
     error,
@@ -90,5 +96,6 @@ export function useBalance(): UseBalanceResult {
     loadBank,
     refresh,
     clearError,
+    setBalanceDirectly,
   };
 }

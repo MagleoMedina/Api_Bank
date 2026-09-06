@@ -10,6 +10,7 @@ export interface AccountBalance {
   currency: string;
   fetchedAt: string;
   source: 'cache' | 'live';
+  userName?: string;
 }
 
 export interface ApiError {
