@@ -25,7 +25,9 @@
     "scout:bnc": "node --env-file=.env scripts/bnc-scout.ts",
     "observe:bnc": "node --env-file=.env scripts/bnc-observe.ts",
     "scout:vol": "node --env-file=.env scripts/vol-scout.ts",
-    "observe:vol": "node --env-file=.env scripts/vol-observe.ts"
+    "observe:vol": "node --env-file=.env scripts/vol-observe.ts",
+    "scout:bdt": "node --env-file=.env scripts/bdt-scout.ts",
+    "observe:bdt": "node --env-file=.env scripts/bdt-observe.ts"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
