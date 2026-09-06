@@ -76,6 +76,11 @@ test('muestra el nombre del Venezolano de Crédito', async () => {
   expect(allText(renderer.toJSON())).toContain('Venezolano de Crédito');
 });
 
+test('muestra el nombre del Banco del Tesoro', async () => {
+  const renderer = await renderCard({ ...LIVE_BALANCE, bankId: 'bdt' });
+  expect(allText(renderer.toJSON())).toContain('Banco del Tesoro');
+});
+
 test('expone el botón de actualizar si recibe onRefresh', async () => {
   let renderer!: ReactTestRenderer.ReactTestRenderer;
   await ReactTestRenderer.act(async () => {

@@ -14,23 +14,28 @@ const mockGateway = { bankId: 'mock', getBalance: vi.fn() } as unknown as BankGa
 const bdvGateway = { bankId: 'bdv', getBalance: vi.fn() } as unknown as BankGatewayPort;
 const bncGateway = { bankId: 'bnc', getBalance: vi.fn() } as unknown as BankGatewayPort;
 const volGateway = { bankId: 'vol', getBalance: vi.fn() } as unknown as BankGatewayPort;
+const bdtGateway = { bankId: 'bdt', getBalance: vi.fn() } as unknown as BankGatewayPort;
 
 describe('BankGatewayRegistry', () => {
   let registry: BankGatewayRegistry;
 
   beforeEach(() => {
     registry = new BankGatewayRegistry(
-      [mockGateway, bdvGateway, bncGateway, volGateway],
+      [mockGateway, bdvGateway, bncGateway, volGateway, bdtGateway],
       makeConfig('mock'),
     );
   });
 
   it('resuelve el banco por defecto (mock) sin parámetro', () => {
     expect(registry.resolve().bankId).toBe('mock');
+    expect(registry.resolve('bdt').bankId).toBe('bdt');
   });
 
   it('resuelve un banco por su id', () => {
     expect(registry.resolve('bdv').bankId).toBe('bdv');
+    expect(registry.resolve('bnc').bankId).toBe('bnc');
+    expect(registry.resolve('vol').bankId).toBe('vol');
+    expect(registry.resolve('bdt').bankId).toBe('bdt');
     expect(registry.resolve('bnc').bankId).toBe('bnc');
     expect(registry.resolve('vol').bankId).toBe('vol');
   });
@@ -40,6 +45,6 @@ describe('BankGatewayRegistry', () => {
   });
 
   it('lista los bancos registrados', () => {
-    expect(registry.listBanks()).toEqual(['mock', 'bdv', 'bnc', 'vol']);
+    expect(registry.listBanks()).toEqual(['mock', 'bdv', 'bnc', 'vol', 'bdt']);
   });
 });

@@ -34,5 +34,6 @@ test('renderiza la app y muestra la pantalla principal', async () => {
   expect(text).toContain('Saldo BDV');
   expect(text).toContain('Saldo BNC');
   expect(text).toContain('Saldo VOL');
+  expect(text).toContain('Saldo BDT');
   expect(text).toContain('Saldo de prueba');
 });

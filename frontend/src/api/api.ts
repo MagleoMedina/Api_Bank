@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-export type BankId = 'bdv' | 'bnc' | 'mock' | 'vol';
+export type BankId = 'bdt' | 'bdv' | 'bnc' | 'mock' | 'vol';
 
 export interface AccountBalance {
   bankId: string;

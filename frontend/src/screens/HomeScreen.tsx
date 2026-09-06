@@ -168,6 +168,14 @@ export function HomeScreen() {
           accessibilityLabel="Consultar saldo Venezolano de Crédito"
         />
         <Button
+          label="Saldo BDT"
+          variant="primary"
+          onPress={() => loadBank('bdt')}
+          disabled={isLoading}
+          style={styles.actionButton}
+          accessibilityLabel="Consultar saldo Banco del Tesoro"
+        />
+        <Button
           label="Saldo de prueba"
           onPress={() => loadBank('mock')}
           disabled={isLoading}

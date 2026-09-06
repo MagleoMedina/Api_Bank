@@ -1,4 +1,5 @@
 export interface BankCredentialsConfig {
+  cedula?: string;
   user?: string;
   card?: string;
   ci?: string;
@@ -37,6 +38,11 @@ export default (): AppConfig => ({
       user: process.env.VOL_USER ?? '',
       password: process.env.VOL_PASSWORD ?? '',
       url: process.env.VOL_URL ?? 'https://vol.venezolano.com/',
+    },
+    bdt: {
+      cedula: process.env.BDT_CEDULA ?? '',
+      password: process.env.BDT_PASSWORD ?? '',
+      url: process.env.BDT_URL ?? 'https://bdtenlinea.bdt.com.ve/?p=1',
     },
     mock: {
       user: 'mock-user',

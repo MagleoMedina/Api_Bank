@@ -18,6 +18,7 @@ interface BalanceCardProps {
 }
 
 const BANK_NAMES: Record<string, string> = {
+  bdt: 'Banco del Tesoro',
   bdv: 'Banco de Venezuela',
   bnc: 'Banco Nacional de Crédito',
   mock: 'Modo de prueba',
