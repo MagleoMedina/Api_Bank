@@ -9,6 +9,13 @@ export interface GetBalanceInput {
   bankId?: string;
   account?: string;
   forceRefresh?: boolean;
+  credentials?: {
+    user?: string;
+    password?: string;
+    cedula?: string;
+    ci?: string;
+    card?: string;
+  };
 }
 
 export interface BalanceResult extends AccountBalance {
@@ -36,7 +43,7 @@ export class GetBalanceUseCase {
     }
 
     const gateway = this.registry.resolve(bankId);
-    const balance = await gateway.getBalance(input.account);
+    const balance = await gateway.getBalance(input.account, input.credentials);
 
     const ttl = this.configService.get<number>('cacheTtlMs') ?? 300_000;
     await this.cache.set(cacheKey, balance, ttl);

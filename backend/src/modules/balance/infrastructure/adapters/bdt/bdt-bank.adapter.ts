@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { chromium, type Page } from 'playwright';
 import type { AccountBalance } from '../../../domain/account-balance.entity.js';
-import type { BankGatewayPort } from '../../../domain/ports/bank-gateway.port.js';
+import type { BankCredentials, BankGatewayPort } from '../../../domain/ports/bank-gateway.port.js';
 import { BankCredentialsMissingException } from '../../../domain/exceptions/bank-credentials-missing.exception.js';
 import { BankLoginFailedException } from '../../../domain/exceptions/bank-login-failed.exception.js';
 import { BDT_SELECTORS } from './bdt.selectors.js';
@@ -17,26 +17,28 @@ export class BdtBankAdapter implements BankGatewayPort {
 
   constructor(private readonly configService: ConfigService) {}
 
-  getBalance(): Promise<AccountBalance> {
+  getBalance(_account?: string, credentials?: BankCredentials): Promise<AccountBalance> {
     if (this.inflight) {
       return this.inflight;
     }
-    this.inflight = this.fetchBalance().finally(() => {
+    this.inflight = this.fetchBalance(credentials).finally(() => {
       this.inflight = null;
     });
     return this.inflight;
   }
 
-  private async fetchBalance(): Promise<AccountBalance> {
-    const credentials = this.configService.get('bankCredentials.bdt');
-    if (!credentials?.cedula || !credentials?.password) {
+  private async fetchBalance(credentials?: BankCredentials): Promise<AccountBalance> {
+    const creds = credentials?.cedula
+      ? credentials
+      : this.configService.get('bankCredentials.bdt');
+    if (!creds?.cedula || !creds?.password) {
       throw new BankCredentialsMissingException(this.bankId);
     }
 
     let lastError: unknown;
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        return await this.scrapeOnce();
+        return await this.scrapeOnce(credentials);
       } catch (error) {
         lastError = error;
         if (attempt === 1) {
@@ -56,14 +58,16 @@ export class BdtBankAdapter implements BankGatewayPort {
     );
   }
 
-  private async scrapeOnce(): Promise<AccountBalance> {
+  private async scrapeOnce(credentials?: BankCredentials): Promise<AccountBalance> {
     const headless = Boolean(this.configService.get<boolean>('headless'));
     const browser = await chromium.launch({ headless, args: ['--no-sandbox', '--disable-setuid-sandbox'], slowMo: 0 });
 
     try {
       const page = await browser.newPage();
-      const credentials = this.configService.get('bankCredentials.bdt');
-      await this.login(page, credentials.cedula, credentials.password);
+      const creds = credentials?.cedula
+        ? credentials
+        : this.configService.get('bankCredentials.bdt');
+      await this.login(page, creds.cedula, creds.password);
       await this.gotoDashboard(page);
 
       let balance: AccountBalance;

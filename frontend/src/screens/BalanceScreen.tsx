@@ -40,7 +40,7 @@ export const BalanceScreen = ({ bank, onNavigateToCredentials }: Props) => {
 
     setConsulting(true);
     try {
-      const response = await apiService.post('/api/balance', {
+      const response = await apiService.postBalance({
         bank,
         user: credential.user_name,
         password: credential.password,

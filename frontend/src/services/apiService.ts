@@ -4,9 +4,19 @@ const baseUrl = Platform.OS === 'android'
   ? 'http://10.0.2.2:3000'
   : 'http://127.0.0.1:3000';
 
+export interface BalanceRequest {
+  bank: string;
+  user?: string;
+  password?: string;
+  cedula?: string;
+  ci?: string;
+  card?: string;
+  account?: string;
+}
+
 export const apiService = {
-  async post(endpoint: string, body: any) {
-    const response = await fetch(`${baseUrl}${endpoint}`, {
+  async postBalance(body: BalanceRequest) {
+    const response = await fetch(`${baseUrl}/balance`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
