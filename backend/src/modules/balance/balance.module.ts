@@ -9,6 +9,7 @@ import { BdvBankAdapter } from './infrastructure/adapters/bdv/bdv-bank.adapter.j
 import { BncBankAdapter } from './infrastructure/adapters/bnc/bnc-bank.adapter.js';
 import { VolBankAdapter } from './infrastructure/adapters/vol/vol-bank.adapter.js';
 import { BdtBankAdapter } from './infrastructure/adapters/bdt/bdt-bank.adapter.js';
+import { BfcBankAdapter } from './infrastructure/adapters/bfc/bfc-bank.adapter.js';
 import { BalanceController } from './presentation/balance.controller.js';
 
 @Global()
@@ -22,6 +23,7 @@ import { BalanceController } from './presentation/balance.controller.js';
     BncBankAdapter,
     VolBankAdapter,
     BdtBankAdapter,
+    BfcBankAdapter,
     { provide: BALANCE_CACHE_TOKEN, useClass: InMemoryBalanceCache },
     {
       provide: BANK_GATEWAY_TOKEN,
@@ -31,8 +33,9 @@ import { BalanceController } from './presentation/balance.controller.js';
         bnc: BncBankAdapter,
         vol: VolBankAdapter,
         bdt: BdtBankAdapter,
-      ) => [mock, bdv, bnc, vol, bdt],
-      inject: [MockBankAdapter, BdvBankAdapter, BncBankAdapter, VolBankAdapter, BdtBankAdapter],
+        bfc: BfcBankAdapter,
+      ) => [mock, bdv, bnc, vol, bdt, bfc],
+      inject: [MockBankAdapter, BdvBankAdapter, BncBankAdapter, VolBankAdapter, BdtBankAdapter, BfcBankAdapter],
     },
   ],
   exports: [GetBalanceUseCase, BankGatewayRegistry],

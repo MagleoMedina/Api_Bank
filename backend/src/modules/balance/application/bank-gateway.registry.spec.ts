@@ -15,13 +15,14 @@ const bdvGateway = { bankId: 'bdv', getBalance: vi.fn() } as unknown as BankGate
 const bncGateway = { bankId: 'bnc', getBalance: vi.fn() } as unknown as BankGatewayPort;
 const volGateway = { bankId: 'vol', getBalance: vi.fn() } as unknown as BankGatewayPort;
 const bdtGateway = { bankId: 'bdt', getBalance: vi.fn() } as unknown as BankGatewayPort;
+const bfcGateway = { bankId: 'bfc', getBalance: vi.fn() } as unknown as BankGatewayPort;
 
 describe('BankGatewayRegistry', () => {
   let registry: BankGatewayRegistry;
 
   beforeEach(() => {
     registry = new BankGatewayRegistry(
-      [mockGateway, bdvGateway, bncGateway, volGateway, bdtGateway],
+      [mockGateway, bdvGateway, bncGateway, volGateway, bdtGateway, bfcGateway],
       makeConfig('mock'),
     );
   });
@@ -36,6 +37,7 @@ describe('BankGatewayRegistry', () => {
     expect(registry.resolve('bnc').bankId).toBe('bnc');
     expect(registry.resolve('vol').bankId).toBe('vol');
     expect(registry.resolve('bdt').bankId).toBe('bdt');
+    expect(registry.resolve('bfc').bankId).toBe('bfc');
     expect(registry.resolve('bnc').bankId).toBe('bnc');
     expect(registry.resolve('vol').bankId).toBe('vol');
   });
@@ -45,6 +47,6 @@ describe('BankGatewayRegistry', () => {
   });
 
   it('lista los bancos registrados', () => {
-    expect(registry.listBanks()).toEqual(['mock', 'bdv', 'bnc', 'vol', 'bdt']);
+    expect(registry.listBanks()).toEqual(['mock', 'bdv', 'bnc', 'vol', 'bdt', 'bfc']);
   });
 });

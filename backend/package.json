@@ -28,6 +28,7 @@
     "observe:vol": "node --env-file=.env scripts/vol-observe.ts",
     "scout:bdt": "node --env-file=.env scripts/bdt-scout.ts",
     "observe:bdt": "node --env-file=.env scripts/bdt-observe.ts",
+    "observe:bfc": "node --env-file=.env scripts/bfc-observe.ts",
     "capture:bdt": "node --env-file=.env scripts/bdt-capture.ts"
   },
   "dependencies": {

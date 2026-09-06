@@ -10,6 +10,10 @@ import { useBalance } from '../hooks/useBalance';
 import { useTheme } from '../theme/ThemeProvider';
 import type { ThemeColors } from '../theme/theme';
 
+type Props = {
+  onNavigateToCredentials?: (bank?: string) => void;
+};
+
 function makeStyles(colors: ThemeColors) {
   return StyleSheet.create({
     scrollContent: {
@@ -65,7 +69,7 @@ function makeStyles(colors: ThemeColors) {
   });
 }
 
-export function HomeScreen() {
+export function HomeScreen({ onNavigateToCredentials }: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const {
@@ -176,11 +180,29 @@ export function HomeScreen() {
           accessibilityLabel="Consultar saldo Banco del Tesoro"
         />
         <Button
+          label="Saldo BFC"
+          variant="primary"
+          onPress={() => loadBank('bfc')}
+          disabled={isLoading}
+          style={styles.actionButton}
+          accessibilityLabel="Consultar saldo Fondo Común"
+        />
+        <Button
           label="Saldo de prueba"
           onPress={() => loadBank('mock')}
           disabled={isLoading}
           style={styles.actionButton}
           accessibilityLabel="Consultar saldo de prueba"
+        />
+      </View>
+
+      <View style={styles.actions}>
+        <Button
+          label="Gestionar Credenciales"
+          variant="secondary"
+          onPress={() => onNavigateToCredentials?.()}
+          style={styles.actionButton}
+          accessibilityLabel="Gestionar credenciales bancarias"
         />
       </View>
     </ScrollView>

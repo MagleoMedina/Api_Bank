@@ -18,6 +18,7 @@ interface BalanceCardProps {
 }
 
 const BANK_NAMES: Record<string, string> = {
+  bfc: 'Fondo Común',
   bdt: 'Banco del Tesoro',
   bdv: 'Banco de Venezuela',
   bnc: 'Banco Nacional de Crédito',

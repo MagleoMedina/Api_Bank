@@ -44,6 +44,11 @@ export default (): AppConfig => ({
       password: process.env.BDT_PASSWORD ?? '',
       url: process.env.BDT_URL ?? 'https://bdtenlinea.bdt.com.ve/?p=1',
     },
+    bfc: {
+      user: process.env.BFC_USER ?? '',
+      password: process.env.BFC_PASSWORD ?? '',
+      url: process.env.BFC_URL ?? 'https://www20.bfc.com.ve/',
+    },
     mock: {
       user: 'mock-user',
       password: 'mock-password',
