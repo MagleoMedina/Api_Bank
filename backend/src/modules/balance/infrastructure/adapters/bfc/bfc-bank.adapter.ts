@@ -1,15 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { chromium, type Page } from 'playwright';
 import type { AccountBalance } from '../../../domain/account-balance.entity.js';
 import type { BankCredentials, BankGatewayPort } from '../../../domain/ports/bank-gateway.port.js';
 import { BankCredentialsMissingException } from '../../../domain/exceptions/bank-credentials-missing.exception.js';
 import { BankLoginFailedException } from '../../../domain/exceptions/bank-login-failed.exception.js';
+import { LogService } from '../../../../../log.service.js';
 
 @Injectable()
 export class BfcBankAdapter implements BankGatewayPort {
   readonly bankId = 'bfc';
-  private readonly logger = new Logger(BfcBankAdapter.name);
+  private readonly logger = new LogService();
   private inflight: Promise<AccountBalance> | null = null;
 
   constructor(private readonly configService: ConfigService) {}
