@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { connectLogs, onLog, type LogEntry } from '../../services/logStreamService';
 
 const LEVEL_COLORS: Record<string, string> = {
@@ -21,7 +21,7 @@ const LEVEL_BG: Record<string, string> = {
 export function LogPanel() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [expanded, setExpanded] = useState(false);
-  const flatListRef = useRef<FlatList>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     connectLogs();
@@ -36,7 +36,7 @@ export function LogPanel() {
 
   useEffect(() => {
     if (expanded && logs.length > 0) {
-      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: false }), 100);
+      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: false }), 100);
     }
   }, [logs.length, expanded]);
 
@@ -57,13 +57,12 @@ export function LogPanel() {
       </Pressable>
 
       {expanded && (
-        <FlatList
-          ref={flatListRef}
-          data={logs}
-          keyExtractor={(_, i) => String(i)}
+        <ScrollView
+          ref={scrollRef}
           style={styles.list}
-          renderItem={({ item }) => (
-            <View style={[styles.row, { backgroundColor: LEVEL_BG[item.level] ?? '#f9fafb' }]}>
+        >
+          {logs.map((item, i) => (
+            <View key={String(i)} style={[styles.row, { backgroundColor: LEVEL_BG[item.level] ?? '#f9fafb' }]}>
               <Text style={[styles.time]}>{formatTime(item.timestamp)}</Text>
               <View style={[styles.levelBadge, { backgroundColor: LEVEL_COLORS[item.level] ?? '#6b7280' }]}>
                 <Text style={styles.levelText}>{item.level.toUpperCase()}</Text>
@@ -73,8 +72,8 @@ export function LogPanel() {
               ) : null}
               <Text style={styles.message} numberOfLines={3}>{item.message}</Text>
             </View>
-          )}
-        />
+          ))}
+        </ScrollView>
       )}
     </View>
   );
