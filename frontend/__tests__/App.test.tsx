@@ -8,6 +8,20 @@ import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import App from '../App';
 
+jest.useFakeTimers();
+
+jest.mock('../src/services/logStreamService', () => ({
+  connectLogs: jest.fn(),
+  disconnectLogs: jest.fn(),
+  onLog: jest.fn(() => jest.fn()),
+  isConnected: jest.fn(() => false),
+}));
+
+jest.mock('../src/services/healthService', () => ({
+  checkServerHealth: jest.fn(() => Promise.resolve({ server: true, lastCheck: new Date() })),
+  getCachedHealth: jest.fn(() => ({ server: true, lastCheck: new Date() })),
+}));
+
 function renderTreeText(node: unknown): string {
   if (node === null || node === undefined) {
     return '';
@@ -25,6 +39,7 @@ test('renderiza la app y muestra la pantalla principal', async () => {
   let tree!: ReactTestRenderer.ReactTestRenderer;
   await ReactTestRenderer.act(async () => {
     tree = ReactTestRenderer.create(<App />);
+    jest.runAllTimers();
   });
   const json = tree.toJSON();
   const text = renderTreeText(json);

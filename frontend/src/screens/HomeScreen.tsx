@@ -7,6 +7,7 @@ import { Header } from '../components/Header/Header';
 import { EmptyState } from '../components/state-views/EmptyState';
 import { ErrorState } from '../components/state-views/ErrorState';
 import { UserPickerModal } from '../components/UserPickerModal/UserPickerModal';
+import { LogPanel } from '../components/LogPanel/LogPanel';
 import { useBalance } from '../hooks/useBalance';
 import { useTheme } from '../theme/ThemeProvider';
 import { useCredential } from '../contexts/CredentialContext';
@@ -301,6 +302,8 @@ export function HomeScreen({ onNavigateToCredentials }: Props) {
           onNavigateToCredentials?.(selectedBank);
         }}
       />
+
+      <LogPanel />
     </ScrollView>
   );
 }

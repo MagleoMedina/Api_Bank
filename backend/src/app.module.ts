@@ -3,6 +3,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration.js';
 import { HealthController } from './health.controller.js';
+import { LogsController } from './logs.controller.js';
+import { LogService } from './log.service.js';
 import { BalanceModule } from './modules/balance/balance.module.js';
 import { BankExceptionFilter } from './modules/balance/presentation/filters/bank-exception.filter.js';
 
@@ -11,7 +13,11 @@ import { BankExceptionFilter } from './modules/balance/presentation/filters/bank
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     BalanceModule,
   ],
-  controllers: [HealthController],
-  providers: [{ provide: APP_FILTER, useClass: BankExceptionFilter }],
+  controllers: [HealthController, LogsController],
+  providers: [
+    LogService,
+    { provide: APP_FILTER, useClass: BankExceptionFilter },
+  ],
+  exports: [LogService],
 })
 export class AppModule {}

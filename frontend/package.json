@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "eventsource-polyfill": "^0.9.6",
     "expo": "~57.0.20",
     "expo-sqlite": "~15.1.2",
     "react": "19.2.3",
