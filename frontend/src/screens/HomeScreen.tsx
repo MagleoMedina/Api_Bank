@@ -169,6 +169,8 @@ export function HomeScreen({ onNavigateToCredentials }: Props) {
         fetchedAt: new Date(response.fetchedAt ?? Date.now()).toISOString(),
         source: 'live',
         userName: credential.user_name,
+        balanceUsd: response.balanceUsd,
+        usdRate: response.usdRate,
       };
       setBalanceDirectly(balanceData);
     } catch {

@@ -93,6 +93,21 @@ function makeStyles(colors: ThemeColors) {
       color: colors.ink,
       letterSpacing: 0.2,
     },
+    usdRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: 8,
+      marginTop: 4,
+    },
+    usdAmount: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: '#059669',
+    },
+    usdRate: {
+      fontSize: 11,
+      color: colors.textMuted,
+    },
     metaRow: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -199,6 +214,15 @@ export function BalanceCard({
       >
         {formatAmount(data.balance, data.currency)}
       </Text>
+
+      {data.balanceUsd != null && data.balanceUsd > 0 ? (
+        <View style={styles.usdRow}>
+          <Text style={styles.usdAmount}>
+            ≈ ${data.balanceUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+          </Text>
+          <Text style={styles.usdRate}>1 USD = {data.usdRate?.toFixed(2)} VES</Text>
+        </View>
+      ) : null}
 
       <View style={styles.metaRow}>
         <View

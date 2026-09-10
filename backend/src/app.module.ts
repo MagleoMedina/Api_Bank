@@ -5,6 +5,7 @@ import configuration from './config/configuration.js';
 import { HealthController } from './health.controller.js';
 import { LogsController } from './logs.controller.js';
 import { LogService } from './log.service.js';
+import { ExchangeRateService } from './exchange-rate.service.js';
 import { BalanceModule } from './modules/balance/balance.module.js';
 import { BankExceptionFilter } from './modules/balance/presentation/filters/bank-exception.filter.js';
 
@@ -16,8 +17,9 @@ import { BankExceptionFilter } from './modules/balance/presentation/filters/bank
   controllers: [HealthController, LogsController],
   providers: [
     LogService,
+    ExchangeRateService,
     { provide: APP_FILTER, useClass: BankExceptionFilter },
   ],
-  exports: [LogService],
+  exports: [ExchangeRateService],
 })
 export class AppModule {}

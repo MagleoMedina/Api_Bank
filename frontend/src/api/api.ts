@@ -11,6 +11,8 @@ export interface AccountBalance {
   fetchedAt: string;
   source: 'cache' | 'live';
   userName?: string;
+  balanceUsd?: number;
+  usdRate?: number;
 }
 
 export interface ApiError {
