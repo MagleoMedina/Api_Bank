@@ -12,12 +12,14 @@ import { BdtBankAdapter } from './infrastructure/adapters/bdt/bdt-bank.adapter.j
 import { BfcBankAdapter } from './infrastructure/adapters/bfc/bfc-bank.adapter.js';
 import { BalanceController } from './presentation/balance.controller.js';
 import { LogService } from '../../log.service.js';
+import { ExchangeRateService } from '../../exchange-rate.service.js';
 
 @Global()
 @Module({
   controllers: [BalanceController],
   providers: [
     LogService,
+    ExchangeRateService,
     GetBalanceUseCase,
     BankGatewayRegistry,
     MockBankAdapter,
